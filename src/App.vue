@@ -1,7 +1,19 @@
 <template>
   <div class="wraper">
-    <div>第{{n}}步</div>
-    <div>
+    <div class="control">
+      <div>第{{n}}步</div>
+      <div>
+        <div v-if="result">
+          <icon-svg class="cellicon" :icon-class="result" />胜利
+        </div>
+        <div v-if="even">{{even}}</div>
+      </div>
+      <div>
+        <button @click="reset">重新开始</button>
+      </div>
+    </div>
+
+    <div class="chess">
       <div class="row">
         <Cell @click="onClickCell(0,$event)" :n="n" :res="result"></Cell>
         <Cell @click="onClickCell(1,$event)" :n="n" :res="result"></Cell>
@@ -19,18 +31,15 @@
       </div>
     </div>
 
-    <div>{{map}}</div>
-    <div v-if="result">
-      {{result}}
-      <button @click="reset">重新开始</button>
-    </div>
+    <!-- <div>{{map}}</div> -->
   </div>
 </template>
 
 <script>
+import IconSvg from "@/components/IconSvg";
 import Cell from "./components/Cell";
 export default {
-  components: { Cell },
+  components: { Cell, IconSvg },
   data() {
     return {
       n: 0,
@@ -39,8 +48,8 @@ export default {
         [null, null, null],
         [null, null, null]
       ],
-
-      result: false
+      result: false,
+      even: false
     };
   },
   methods: {
@@ -74,6 +83,7 @@ export default {
       ];
       this.result = false;
       this.n = 0;
+      this.even = null;
     },
     tell() {
       let map = this.map;
@@ -84,7 +94,7 @@ export default {
           map[i][0] === map[i][1] &&
           map[i][1] === map[i][2]
         ) {
-          this.result = map[i][0] + "胜利";
+          this.result = map[i][0];
         }
       }
       for (let j = 0; j <= 2; j++) {
@@ -93,7 +103,7 @@ export default {
           map[0][j] === map[1][j] &&
           map[1][j] === map[2][j]
         ) {
-          this.result = map[0][j] + "胜利";
+          this.result = map[0][j];
         }
       }
 
@@ -102,17 +112,17 @@ export default {
         map[0][0] == map[1][1] &&
         map[1][1] == map[2][2]
       ) {
-        this.result = map[0][0] + "胜利";
+        this.result = map[0][0];
       }
       if (
         map[0][2] !== null &&
         map[0][2] == map[1][1] &&
         map[1][1] == map[2][0]
       ) {
-        this.result = map[0][2] + "胜利";
+        this.result = map[0][2];
       }
-      if (map.flat(2).every(item => item !== null)) {
-        this.result = "平局";
+      if (map.flat(2).every(item => item !== null) && !this.result) {
+        this.even = "平局";
       }
     }
   }
@@ -128,5 +138,21 @@ export default {
   justify-content: center;
   align-items: center;
   flex-direction: column;
+}
+.chess {
+  border: 2px solid #000;
+}
+.control {
+  display: flex;
+  justify-content: space-between;
+  width: 310px;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.control > div {
+  width: 33.3%;
+  display: flex;
+  justify-content: center;
 }
 </style>

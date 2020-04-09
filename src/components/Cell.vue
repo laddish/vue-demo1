@@ -1,14 +1,19 @@
 <template>
-
   <div class="cell" @click="onClickSelf">
-    <template v-if="status">{{text}}</template>
+    <template v-if="status">
+      <icon-svg class="cellicon" :icon-class="text" />
+    </template>
     <template v-else></template>
   </div>
 </template>
 
 <script>
+import IconSvg from "@/components/IconSvg";
+
 export default {
   props: ["n", "res"],
+  components: { IconSvg },
+
   data() {
     return {
       status: false,
@@ -28,7 +33,7 @@ export default {
         return;
       }
       this.status = true;
-      this.text = this.n % 2 === 0 ? "x" : "o";
+      this.text = this.n % 2 === 0 ? "zu" : "yuan";
       this.$emit("click", this.text);
     }
   }
@@ -46,5 +51,8 @@ export default {
   justify-content: center;
   align-content: center;
   user-select: none;
+}
+.cellicon {
+  margin: auto;
 }
 </style>
